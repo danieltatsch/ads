@@ -17,19 +17,23 @@ Random::Random(int seed){
 double Random::rand_u(){
 	//distribuição uniforme entre 0 e 1
 	uniform_real_distribution<double> distribution (0.0,1.0);
-
 	return(distribution(engine));
 }
 
 double Random::rand_exp(){
 	//distribuição exponencial com número médio de ocorrências igual a 1
 	exponential_distribution<double> distribution (1.0);
-
 	return(distribution(engine));
 }
 
 double Random::rand_exp(float lambda){	
 	return((-1/lambda)*log(rand_u()));
+}
+
+int Random::rand_poisson(float mean){
+	//distribuição exponencial com média igual a mean	
+	poisson_distribution<int> distribution (mean);
+	return(distribution(engine));
 }
 
 // valor de retorno servira de semente para a prox exec

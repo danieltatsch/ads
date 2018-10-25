@@ -12,6 +12,7 @@ public:
 	double rand_u();
 	double rand_exp();
 	double rand_exp(float lambda);
+	int rand_poisson(float mean);
 	double congruente();
 };
 
