@@ -36,6 +36,7 @@ int Random::rand_poisson(float mean){
 	return(distribution(engine));
 }
 
+
 // valor de retorno servira de semente para a prox exec
 double Random::congruente(){
 	seed = (a * seed + c) % m;	
