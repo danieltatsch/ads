@@ -32,12 +32,24 @@ queue<task> fila;
 
 states server_state = IDLE;
 
-double avg_waiting_time = 0.0;
+double waiting_time_total = 0.0;
+double last_event_time = 0.0;
+double cumulated_queue_length = 0.0;
+double busy_time_total = 0.0;
+
+void update_statistics(){
+	double time_since_last_event = sim_time - last_event_time;
+	cumulated_queue_length += fila.size() * time_since_last_event;
+
+	if (server_state == BUSY) busy_time_total += time_since_last_event;
+}
 
 int main(){
 	for (int nTask = 0; nTask < N; nTask++) {
+		if(next_arrival < next_departure) sim_time = (double)next_arrival;
+		else sim_time = next_departure;
+		update_statistics();
 		if(next_arrival < next_departure) {
-	    	sim_time = (double)next_arrival;
 			if(server_state == IDLE) {
 	            server_state = BUSY;
 	            next_departure = sim_time + r2.rand_exp(mean_processing);
@@ -45,9 +57,8 @@ int main(){
 				tasks[nTask].arrival_time = sim_time;
 				fila.push(tasks[nTask]);
 			}
-	    	next_arrival = (int)sim_time + (int)r.rand_exp(mean_arrival);
+	    	next_arrival = (int)sim_time + r.rand_exp(mean_arrival);
 	    }else{
-			sim_time = next_departure;
 			if(fila.empty()) {
 	            server_state = IDLE;
 	            next_departure = huge_val;
@@ -56,10 +67,16 @@ int main(){
 	            fila.pop();
 	            // printf("pop da fila:  %d\n", nTask);
 	            next_departure = sim_time + r2.rand_exp(mean_processing);
-	            avg_waiting_time = sim_time - tasks[nTask].arrival_time;
+	            waiting_time_total = sim_time - tasks[nTask].arrival_time;
 	        }
 	    }
+	    last_event_time = sim_time;
 	}
-	avg_waiting_time = avg_waiting_time/N;
-	printf("AVG_WAITING_TIME: %f\n", avg_waiting_time);
+	double avg_waiting_time = waiting_time_total / sim_time;
+	double avg_queue_length = cumulated_queue_length / sim_time;
+	double avg_utilization = busy_time_total / sim_time;
+
+	cout << "AVG_UTILIZATION: " << avg_utilization << endl;
+	cout << "AVG_QUEUE_LENGTH: " << avg_queue_length << endl;
+	cout << "AVG_WAITING_TIME: " << avg_waiting_time << endl;
 }
