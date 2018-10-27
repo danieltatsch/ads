@@ -26,10 +26,8 @@ double Random::rand_exp(){
 	return(distribution(engine));
 }
 
-double Random::rand_exp(float mean){	
-	// return((-1*mean)*log(rand_u()));
-	exponential_distribution<double> distribution (mean);
-	return(distribution(engine));
+double Random::rand_exp(float mean){
+	return((-mean) * log(rand_u()));
 }
 
 int Random::rand_poisson(float mean){

@@ -6,7 +6,7 @@
 class Random{
 private:
 	std::default_random_engine engine;
-	int seed;
+	unsigned int seed;
 public:
 	Random(int seed);
 	double rand_u();
